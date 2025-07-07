@@ -1,0 +1,60 @@
+ 1. Locations Table
+);
+
+-- 6. Catches Table
+CREATE TABLE Catches (
+    CatchID INTEGER PRIMARY KEY AUTOINCREMENT,
+    TripID INTEGER NOT NULL,
+    SpeciesID INTEGER NOT NULL,
+    WeightKg REAL,
+    Count INTEGER,
+    DiscardFlag BOOLEAN DEFAULT 0, -- 0 = No, 1 = Yes
+    SizeMin REAL, -- in cm
+    SizeMax REAL, -- in cm
+    SizeAvg REAL, -- in cm
+    FOREIGN KEY (TripID) REFERENCES Trips(TripID),
+    FOREIGN KEY (SpeciesID) REFERENCES Species(SpeciesID)
+);
+
+-- 7. Markets Table
+CREATE TABLE Markets (
+    MarketID INTEGER PRIMARY KEY AUTOINCREMENT,
+    MarketName TEXT NOT NULL,
+    LocationID INTEGER NOT NULL,
+    MarketType TEXT, -- e.g., Wholesale, Retail
+    ContactPerson TEXT,
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+);
+
+-- 8. Sales Table
+CREATE TABLE Sales (
+    SaleID INTEGER PRIMARY KEY AUTOINCREMENT,
+    CatchID INTEGER NOT NULL,
+    MarketID INTEGER NOT NULL,
+    PricePerKg REAL,
+    TotalValue REAL,
+    BuyerName TEXT,
+    SaleDate DATE NOT NULL,
+    PaymentMethod TEXT,
+    FOREIGN KEY (CatchID) REFERENCES Catches(CatchID),
+    FOREIGN KEY (MarketID) REFERENCES Markets(MarketID)
+);
+
+-- 9. Observers Table
+CREATE TABLE Observers (
+    ObserverID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL,
+    Affiliation TEXT,
+    Role TEXT,
+    ContactInfo TEXT
+);
+
+-- 10. DataEntryLog Table
+CREATE TABLE DataEntryLog (
+    LogID INTEGER PRIMARY KEY AUTOINCREMENT,
+    TableName TEXT NOT NULL,
+    RecordID INTEGER NOT NULL,
+    Action TEXT NOT NULL, -- Insert / Update / Delete
+    Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    User TEXT NOT NULL
+);
